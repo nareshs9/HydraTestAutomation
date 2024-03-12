@@ -1,13 +1,12 @@
 name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions
 
 on: [pull_request_target, issues, push]
 
 jobs:
-  Explore-GitHub-Actions:
+  greet:
     runs-on: self-hosted
     steps:
     # Runs a single command using the runners shell
     - name: Send greeting
-     run: echo "Hello GitHub Actioins Demo"
+      run: echo "Hello GitHub Actioins Demo"
       
