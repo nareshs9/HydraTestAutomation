@@ -1,0 +1,16 @@
+name: Hello Precision
+
+on:
+  push:
+   branches:
+    - 'main'
+  pull_request:
+   branches:
+    - 'main'
+
+jobs:
+  hello:
+   runs-on: self-hosted
+   steps:
+    - name: Hello Step
+      run: echo "Hello Precision"
