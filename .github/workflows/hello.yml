@@ -15,4 +15,3 @@ jobs:
     - name: Bash
       shell: bash
       run: ls -la
-      run: echo "Hello Precision"
