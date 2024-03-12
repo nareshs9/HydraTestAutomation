@@ -12,5 +12,7 @@ jobs:
   hello:
    runs-on: self-hosted
    steps:
-    - name: Hello Step
+    - name: Bash
+      shell: bash
+      run: ls -la
       run: echo "Hello Precision"
