@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 _______________________________________________________________________
-COPYRIGHT
-_______________________________________________________________________
 
 PROJECT Layer 7 Version 1
 _______________________________________________________________________
@@ -23,7 +21,8 @@ from PIL import Image
 import os
 import time
 from datetime import datetime
-from supporting_packages_config import General
+from supporting_packages_config import Display15
+from supporting_packages_config import Display27
 import shutil
 import logging
 import sys
@@ -87,10 +86,13 @@ class ImpedanceMeasurement:
         
 
         # move to ok button to select 20Khz
-        pyautogui.moveTo(1084,595)
+        #pyautogui.moveTo(1084,595)
+        pyautogui.moveTo(self.config_ele.ok_button_select_frequency[0], self.config_ele.ok_button_select_frequency[1])
         time.sleep(2)
         # click on ok button with 20KHz
-        click_ok = pyautogui.click(1084,585)
+        #click_ok = pyautogui.click(1084,585)
+        test2 = pyautogui.click(x=self.config_ele.ok_button_select_frequency[0], y=self.config_ele.ok_button_select_frequency[1])
+
         time.sleep(10)
         self.window_titles = pygetwindow.getAllTitles()
         logger.info("Main Intan Controller %s", self.window_titles)
@@ -136,32 +138,25 @@ class ImpedanceMeasurement:
         # Select "NotchFilter" under "BW" pane and take screen capture
         pyautogui.moveTo(self.config_ele.select_Notch[0], self.config_ele.select_Notch[1])
         time.sleep(2)
-        #click_ok = pyautogui.click(570,1094)
         move_ok = pyautogui.click(self.config_ele.select_Notch[0], self.config_ele.select_Notch[1])
         time.sleep(2)
         self.window_titles = pygetwindow.getAllTitles()
         logger.info("- Notch Value %s", self.window_titles)
         self.window = pygetwindow.getWindowsWithTitle('intan')[0]
         logger.info("Looking notch value %s", self.window.title)
-        #pyautogui.moveTo(1084,595)
+
         #save second screen
         screenObj5 = ScreenCapture(self.screens_path, self.window, "Notch_Selected", False)
         screen_saved = screenObj5.saveScreenShots()
 
-        # Select "NotchFilter" as 60Hz and take screen capture
-        #click_ok = pyautogui.click(570,1094)
         click_ok = pyautogui.moveTo(self.config_ele.select_Notch_60Hz[0], self.config_ele.select_Notch_60Hz[1])
         time.sleep(2)
         click_ok = pyautogui.click(self.config_ele.select_Notch_60Hz[0], self.config_ele.select_Notch_60Hz[1])
         time.sleep(2)
 
-
-        #self.window_titles = pygetwindow.getAllTitles()
-        #print("Main Intan Application %s", self.window_titles)
         self.window = pygetwindow.getWindowsWithTitle('intan')[0]
-        #print("Selecting notch value", self.window.title)
-        #pyautogui.moveTo(1084,595)
-        #save second screen
+
+
         screenObj6 = ScreenCapture(self.screens_path, self.window, "Notch_60Hz_Selected", False)
         screen_saved = screenObj6.saveScreenShots()
 
@@ -332,9 +327,6 @@ class ImpedanceMeasurement:
         #subprocess.check_output("Taskkill /PID %d /F" % child_pid)
         logger.info(" close intan application")
         
-        #shell_process.terminate() 
-
-        #click_ok = pyautogui.click(self.config_ele.select_close_intan_app[0], self.config_ele.select_close_intan_app[1])
         time.sleep(7)
 
 
@@ -361,10 +353,11 @@ class ImpedanceMeasurement:
         time.sleep(10)
         self.window_titles = pygetwindow.getAllTitles()
         
-        pyautogui.moveTo(1084,595)
-     
-        # move to ok button to select 20Khz
-        pyautogui.moveTo(1084,595)
+        pyautogui.moveTo(self.config_ele.ok_button_select_frequency[0], self.config_ele.ok_button_select_frequency[1])
+        time.sleep(2)
+        # click on ok button with 20KHz
+        #click_ok = pyautogui.click(1084,585)
+        test2 = pyautogui.click(x=self.config_ele.ok_button_select_frequency[0], y=self.config_ele.ok_button_select_frequency[1])
         time.sleep(5)
         # click on ok button with 20KHz
         click_ok = pyautogui.click(1084,585)
@@ -566,10 +559,7 @@ class ImpedanceMeasurement:
         time.sleep(2)
         #subprocess.check_output("Taskkill /PID %d /F" % child_pid)
         logger.info(" close intan application")
-        
-        #shell_process.terminate() 
 
-        #click_ok = pyautogui.click(self.config_ele.select_close_intan_app[0], self.config_ele.select_close_intan_app[1])
         time.sleep(7)
 
 
@@ -616,22 +606,14 @@ class ScreenCapture:
             img = img.crop((left, top, right, bottom))
             img.save(path)
         
-       
         return True
 
 
 
 
 if __name__ == '__main__':
-    
-    #Load the configuration file
-    
-    config = General()
-    #app_loc = config.intan_path
-    logger.info("Intan is located in the path %s", config.intan_path)
-    
-    # Script version:
-    logger.info("Impedance_DataCollection Script Version: %s", config.version)
+    global config
+
     # Create a Directory to store impedance files
     current_time = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
     logger.info("The current time is %s", current_time)
@@ -647,6 +629,21 @@ if __name__ == '__main__':
     log_filename = "Record_Data_log"+current_time+".log"
     logging.basicConfig(filename=dir_path+"/"+log_filename, level = logging.INFO)
     logger.info("Started logging")
+    #Load the configuration file
+    ScreenSize = sys.argv[2]
+    if int(ScreenSize) == 27:
+        config = Display27()
+        logger.info("Screen Size provided by the user is %s", ScreenSize)
+    if int(ScreenSize) == 15:
+        config = Display15()
+        logger.info("Screen Size provided by the user is %s", ScreenSize)
+
+    #app_loc = config.intan_path
+    logger.info("Intan is located in the path %s", config.intan_path)
+    
+    # Script version:
+    logger.info("Impedance_DataCollection Script Version: %s", config.version)
+
     logger.info("argument list %s", sys.argv[1])
     logger.info("Recording started at %s", current_time)
 
@@ -681,7 +678,7 @@ if __name__ == '__main__':
         
         intan_obj.startIntanRHX()
         #logger.info("ImpedanceMeasurement object created and path has been set %s", intan_obj.path)
-        for j in range(0, int(sys.argv[1])):
+        for j in range(0, 2):
             logger.info("Start and stop playing will start in a moment")
             Intan_pid = intan_obj.get_PID_SpecificProcess()
             logger.info("Intan PID's are %s", Intan_pid)
@@ -691,8 +688,6 @@ if __name__ == '__main__':
 
             # Call the start and stop function
             intan_obj.startstoprecording()
-
-            
 
         logger.info("Waiting for 5 seconds... %s", str(i))
         time.sleep(5)

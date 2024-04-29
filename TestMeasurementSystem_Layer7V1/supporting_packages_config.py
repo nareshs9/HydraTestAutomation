@@ -18,9 +18,9 @@ _______________________________________________________________________
 
 """
 
-class General:
+class Display15:
     def __init__(self):
-        self.version = 1.0.0
+        self.version = "1.0.0"
         self.intan_path = "C:\Program Files\Intan\IntanRHX.exe"
         self.timeout = 60
         self.select_intan_ctrl_co_ordinates = [1346, 642]
@@ -73,7 +73,58 @@ class General:
 
 
 
+class Display27:
+    def __init__(self):
+        self.version = "1.0.0"
+        self.intan_path = "C:\Program Files\Intan\IntanRHX.exe"
+        self.timeout = 60
+        self.select_intan_ctrl_co_ordinates = [1302, 585]
+        self.ok_button_select_frequency = [1144,544]
+        self.get_number_of_ports_connected = [640,987]
+        self.select_BW = [39,511]
+        self.select_Notch = [184,674]
+        self.select_Notch_60Hz = [152, 733]
+        self.select_impedence_tab = [117,516]
+        self.select_Impedence_Test_Button = [115,546]
+        self.select_ok_Impedence_Test = [1099,590]
+        self.run_Impedence_measurement = [140,629]
+        self.select_save_Impedence_Measurement = [189,669]
+        self.select_to_delete_edit_path = [1487,61]
+        self.select_to_write_file_name = [986,930]
+        self.select_to_save = [1743,1002]
+        self.select_tools = [200, 45]
+        self.select_tools_probmap = [200,165]
+        self.select_maximize_probemap_window = [1172,261]
+        self.select_probemap_file = [921, 537]
+        self.select_probemap_loadfile = [921,557]
+        self.select_probemap_config_file_path = [1389,60]
+        self.select_probemap_config_file = [355, 227]
+        self.select_open_probemap_config_file = [1700,1096]
+        self.select_best_fit_probmap = [1896, 85]
+        self.select_ohm_icon_probemap = [1900,505]
+        self.select_close_probemap = [1887,12]
 
+        # Overnight Test Execution - 1st April 2024
+        self.select_folder_icon = [182,63]
+        self.select_to_delete_edit_path = [1487,61]
+        self.select_to_write_file_name = [986,930]
+        self.select_to_save = [1743,1002]
+        self.select_to_record = [210,59]
+        self.select_to_stop_recording = [87,58]
+        self.select_close_intan_app = [1895,9]
+
+        # startstoprecording parameters
+        self.select_playbutton = [121,62]
+        self.select_scrollbar = [1899, 897]
+        self.select_display_ports = [642, 985]
+        self.select_portB = [559,813]
+        self.select_portC = [538,837]
+        self.select_portD = [542,856]
+        self.select_portE = [528,871]
+        self.select_portF = [541,889]
+        self.select_portG = [540,908]
+        self.select_portH = [549,925]
+        self.select_stopbutton = [87,58]
 
 
 
