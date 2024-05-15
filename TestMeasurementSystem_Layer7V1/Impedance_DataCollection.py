@@ -45,7 +45,7 @@ logger = logging.getLogger(__name__)
 
 
 class ImpedanceMeasurement:
-    def __init__(self, path, app_loc, screens_path, config_ele, record_file_name, impedance_fname, data_recording):
+    def __init__(self, path, app_loc, screens_path, config_ele, record_file_name, impedance_fname, data_recording, probemap):
         self.path = path
         self.app_loc = app_loc
         self.window = 0
@@ -54,6 +54,7 @@ class ImpedanceMeasurement:
         self.record_file_name = record_file_name
         self.impedance_fname = impedance_fname
         self.data_recording = data_recording
+        self.probemap = probemap
     
 
     def startIntanRHX(self):
@@ -112,6 +113,8 @@ class ImpedanceMeasurement:
 
         #Verify all 8 ports connected and identified using Intan Software
         #move to verify number of ports connected
+        logger.info("move to verify number of ports")
+        logger.info("Co-ordinates to verify number of ports are %d, %d",self.config_ele.get_number_of_ports_connected[0], self.config_ele.get_number_of_ports_connected[1])
         pyautogui.moveTo(self.config_ele.get_number_of_ports_connected[0], self.config_ele.get_number_of_ports_connected[1])
         time.sleep(2)
         # click on to verify number of ports connected
@@ -129,6 +132,7 @@ class ImpedanceMeasurement:
 
         # Select "BW" on left pane and take screen capture
         # Move to "BW" option
+        logger.info("Co-ordinates to move to BW %d, %d",self.config_ele.select_BW[0], self.config_ele.select_BW[1])
         pyautogui.moveTo(self.config_ele.select_BW[0], self.config_ele.select_BW[1])
         time.sleep(2)
         #click_ok = pyautogui.click(570,1094)
@@ -236,32 +240,25 @@ class ImpedanceMeasurement:
         time.sleep(2)
         pyautogui.press('enter')
         time.sleep(2)
-        self.window = pygetwindow.getWindowsWithTitle('save')[0]
-        screenObj = ScreenCapture(self.screens_path, self.window, "save2", True)
-        screen_saved = screenObj.saveScreenShots()
 
-        # Give file name in known path into save impedance window
-        logger.info("Delete the existing path")
-        # move to delete the existing path
-        
+
+
         click_ok = pyautogui.click(self.config_ele.select_to_write_file_name[0], self.config_ele.select_to_write_file_name[1])
-        time.sleep(2)
+        time.sleep(5)
         pyautogui.press('delete')
         pyautogui.write(self.impedance_fname)
-        self.window = pygetwindow.getWindowsWithTitle('save')[0]
-        screenObj = ScreenCapture(self.screens_path, self.window, "save3", True)
-        screen_saved = screenObj.saveScreenShots()
+
 
         # save button pressed on save impedance window
         logger.info("Save the impedance file")
         click_ok = pyautogui.click(self.config_ele.select_to_save[0], self.config_ele.select_to_save[1])
         time.sleep(2)
         self.window = pygetwindow.getWindowsWithTitle('intan')[0]
-        screenObj = ScreenCapture(self.screens_path, self.window, "save3", True)
+        screenObj = ScreenCapture(self.screens_path, self.window, "save4", True)
         screen_saved = screenObj.saveScreenShots()
         
-        # Start and stop recoring every 10 seconds to new file.
-         # Probemap - Selecting tools option
+        # Start and stop recording every 10 seconds to new file.
+        
         logger.info("Click on folder icon")
         click_ok = pyautogui.click(self.config_ele.select_folder_icon[0], self.config_ele.select_folder_icon[1])
         #move_to = pyautogui.moveTo(200,145)
@@ -331,13 +328,8 @@ class ImpedanceMeasurement:
         click_ok = pyautogui.click(self.config_ele.select_to_stop_recording[0], self.config_ele.select_to_stop_recording[1])
         time.sleep(7)
 
-        #subprocess.check_output("Taskkill /PID %d /F" % child_pid)
-        logger.info(" close intan application")
-        
-        time.sleep(7)
 
-
-    def startstoprecording(self):
+    def startstopplay(self):
         """
         This function will perform the following: a) Start Intan App b) Verify all ports c) Start play
         d) stop play e) Do not record anything f) close Intan App
@@ -445,21 +437,106 @@ class ImpedanceMeasurement:
         pyautogui.moveTo(self.config_ele.run_Impedence_measurement[0], self.config_ele.run_Impedence_measurement[1])
         time.sleep(2)
         click_ok = pyautogui.click(self.config_ele.run_Impedence_measurement[0], self.config_ele.run_Impedence_measurement[1])
-        logger.info("Waiting 20 for impedance test to be completed....")
+        logger.info("Waiting 30 for impedance test to be completed....")
         time.sleep(30)
-          
-        logger.info("click on play button")
-        move_to = pyautogui.moveTo(self.config_ele.select_to_record[0], self.config_ele.select_to_record[1])
+
+        # Capture probemap.
+        logger.info("click on Tools button")
+        move_to = pyautogui.moveTo(self.config_ele.select_tools[0], self.config_ele.select_tools[1])
         time.sleep(2)
-        click_ok = pyautogui.click(self.config_ele.select_to_record[0], self.config_ele.select_to_record[1])
+        click_ok = pyautogui.click(self.config_ele.select_tools[0], self.config_ele.select_tools[1])
+        time.sleep(2)
+
+        logger.info("click on probemap button")
+        move_to = pyautogui.moveTo(self.config_ele.select_tools_probemap[0], self.config_ele.select_tools_probemap[1])
+        time.sleep(2)
+        click_ok = pyautogui.click(self.config_ele.select_tools_probemap[0], self.config_ele.select_tools_probemap[1])
+        time.sleep(2)
+        #self.window = pygetwindow.getWindowsWithTitle('intan')[0]
+        #screenObj = ScreenCapture(self.screens_path, self.window, "PortA", True)
+        #filename = "portA"+str(time.time())+".png"
+        
+        logger.info("click on maximize button")
+        move_to = pyautogui.moveTo(self.config_ele.select_maximize_probemap_window[0], self.config_ele.select_maximize_probemap_window[1])
+        time.sleep(2)
+        click_ok = pyautogui.click(self.config_ele.select_maximize_probemap_window[0], self.config_ele.select_maximize_probemap_window[1])
+        time.sleep(2)
+
+        logger.info("click on file button")
+        move_to = pyautogui.moveTo(self.config_ele.select_probemap_file[0], self.config_ele.select_probemap_file[1])
+        time.sleep(2)
+        click_ok = pyautogui.click(self.config_ele.select_probemap_file[0], self.config_ele.select_probemap_file[1])
+        time.sleep(2)
+
+        logger.info("click on loadfile button")
+        move_to = pyautogui.moveTo(self.config_ele.select_probemap_loadfile[0], self.config_ele.select_probemap_loadfile[1])
+        time.sleep(2)
+        click_ok = pyautogui.click(self.config_ele.select_probemap_loadfile[0], self.config_ele.select_probemap_loadfile[1])
+        time.sleep(2)
+
+        logger.info("click on file path space")
+
+        # Delete Existing path in save impedance window
+        logger.info("Delete the existing path")
+        # move to delete existing path in save impedance window
+        pyautogui.moveTo(self.config_ele.select_to_delete_edit_path[0], self.config_ele.select_to_delete_edit_path[1])
+        time.sleep(2)
+        click_ok = pyautogui.click(self.config_ele.select_to_delete_edit_path[0], self.config_ele.select_to_delete_edit_path[1])
+        time.sleep(2)
+        pyautogui.press('delete')
+        time.sleep(2)
+        pyautogui.write(self.probemap)
+        time.sleep(2)
+        pyautogui.press('enter')
+        time.sleep(2)
+        
+
+        logger.info("click on select xml file")
+        move_to = pyautogui.moveTo(self.config_ele.select_probemap_config_file[0], self.config_ele.select_probemap_config_file[1])
+        time.sleep(2)
+        click_ok = pyautogui.click(self.config_ele.select_probemap_config_file[0], self.config_ele.select_probemap_config_file[1])
+        time.sleep(2)
+        
+        logger.info("click on open button")
+        move_to = pyautogui.moveTo(self.config_ele.select_open_probemap_config_file[0], self.config_ele.select_open_probemap_config_file[1])
+        time.sleep(2)
+        click_ok = pyautogui.click(self.config_ele.select_open_probemap_config_file[0], self.config_ele.select_open_probemap_config_file[1])
+        time.sleep(5)
+
+        logger.info("click on best fit button")
+        move_to = pyautogui.moveTo(self.config_ele.select_best_fit_probmap[0], self.config_ele.select_best_fit_probmap[1])
+        time.sleep(2)
+        click_ok = pyautogui.click(self.config_ele.select_best_fit_probmap[0], self.config_ele.select_best_fit_probmap[1])
+        time.sleep(2)
+
+        logger.info("click on Ohm symbol button")
+        move_to = pyautogui.moveTo(self.config_ele.select_ohm_icon_probemap[0], self.config_ele.select_ohm_icon_probemap[1])
+        time.sleep(2)
+        click_ok = pyautogui.click(self.config_ele.select_ohm_icon_probemap[0], self.config_ele.select_ohm_icon_probemap[1])
+        time.sleep(2)
+        self.window = pygetwindow.getWindowsWithTitle('Probe Map')[0]
+        
+        screenObj = ScreenCapture(self.screens_path, self.window, "ProbeMap", True)
+        screen_saved = screenObj.saveScreenShots()
+        time.sleep(5)
+
+        logger.info("click on close probemap")
+        move_to = pyautogui.moveTo(self.config_ele.select_close_probemap[0], self.config_ele.select_close_probemap[1])
+        time.sleep(2)
+        click_ok = pyautogui.click(self.config_ele.select_close_probemap[0], self.config_ele.select_close_probemap[1])
+        time.sleep(2)
+
+        
+        logger.info("click on play button")
+        move_to = pyautogui.moveTo(self.config_ele.select_to_play[0], self.config_ele.select_to_play[1])
+        time.sleep(2)
+        click_ok = pyautogui.click(self.config_ele.select_to_play[0], self.config_ele.select_to_play[1])
         time.sleep(2)
         self.window = pygetwindow.getWindowsWithTitle('intan')[0]
         screenObj = ScreenCapture(self.screens_path, self.window, "PortA", True)
-        filename = "portA"+str(time.time())+".png"
+        screen_saved = screenObj.saveScreenShots()
 
-        #screen_saved = screenObj.saveScreenShots()
-        
-        #Wait for 5 seconds
+        """
         time.sleep(5)
         logger.info("click on scroll bar for first time")
         move_to = pyautogui.moveTo(self.config_ele.select_scrollbar[0], self.config_ele.select_scrollbar[1])
@@ -554,7 +631,7 @@ class ImpedanceMeasurement:
         time.sleep(2)
         click_ok = pyautogui.click(self.config_ele.select_portH[0], self.config_ele.select_portH[1])
         time.sleep(2)
-
+        """ # Remove comment later
         logger.info("stop the playing")
         move_to = pyautogui.moveTo(self.config_ele.select_display_ports[0], self.config_ele.select_display_ports[1])
         time.sleep(2)
@@ -563,11 +640,8 @@ class ImpedanceMeasurement:
         move_to = pyautogui.moveTo(self.config_ele.select_stopbutton[0], self.config_ele.select_stopbutton[1])
         time.sleep(2)
         click_ok = pyautogui.click(self.config_ele.select_stopbutton[0], self.config_ele.select_stopbutton[1])
-        time.sleep(2)
-        #subprocess.check_output("Taskkill /PID %d /F" % child_pid)
-        logger.info(" close intan application")
-
-        time.sleep(7)
+        time.sleep(10)
+        
 
 
     def get_PID_SpecificProcess(self):
@@ -618,9 +692,10 @@ class ScreenCapture:
 
 if __name__ == '__main__':
     global config
-
+    version = "TMS_DataCollection_1.0"
     # Create a Directory to store impedance files
     current_time = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+    logger.info("Test Measurement System Data Collection Script version: %s", version)
     logger.info("The current time is %s", current_time)
     dir_path = os.getcwd()+"/Impedance"+current_time
     dir_status = os.mkdir(dir_path)
@@ -659,7 +734,7 @@ if __name__ == '__main__':
         src_file_path = src_folder + file_name
         if os.path.isfile(src_file_path) and "Array" in file_name:
             shutil.copy(src_file_path, dir_probemap_config_path)
-            print("Copied the config file")
+            logger.info("Copied the config file")
 
 
 
@@ -670,7 +745,7 @@ if __name__ == '__main__':
         logger.info("Impedance and recording attempt number %s", i)
         impedance_file_name = "impedance"+str(i)
         Record_file_name = "Record"+str(i)
-        intan_obj = ImpedanceMeasurement(path = dir_path, app_loc = config.intan_path, screens_path = dir_screenshots_path, config_ele = config, record_file_name = Record_file_name, impedance_fname = impedance_file_name, data_recording = "True")
+        intan_obj = ImpedanceMeasurement(path = dir_path, app_loc = config.intan_path, screens_path = dir_screenshots_path, config_ele = config, record_file_name = Record_file_name, impedance_fname = impedance_file_name, data_recording = "True", probemap = dir_probemap_config_path)
         # Look for any existing Intan RHX process running on this pc
         Intan_pid = intan_obj.get_PID_SpecificProcess()
         logger.info("Intan PID's are %s", Intan_pid)
@@ -682,8 +757,8 @@ if __name__ == '__main__':
         # Start Intan
         
         intan_obj.startIntanRHX()
-        #logger.info("ImpedanceMeasurement object created and path has been set %s", intan_obj.path)
-        for j in range(0, 22):
+        
+        for j in range(0, config.number_of_times_inner_loop):
             logger.info("Start and stop playing will start in a moment")
             Intan_pid = intan_obj.get_PID_SpecificProcess()
             logger.info("Intan PID's are %s", Intan_pid)
@@ -692,7 +767,7 @@ if __name__ == '__main__':
                 j_pid.terminate()
 
             # Call the start and stop function
-            intan_obj.startstoprecording()
+            intan_obj.startstopplay()
 
         logger.info("Waiting for 5 seconds... %s", str(i))
         time.sleep(5)
